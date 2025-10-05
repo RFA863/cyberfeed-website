@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {  Routes, Route } from "react-router-dom";
 
 import HomePage from "../pages/HomePage";
 import Navbar from "../components/Navbar";
@@ -8,7 +8,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 
 function AppRoutes(){
   return(
-    <Router>
+    <>
       <Navbar/>
       <Routes>
         <Route path="/" element={<HomePage/>}/>
@@ -18,7 +18,7 @@ function AppRoutes(){
           <Route path="/dashboard" element={<DashboardPage/>}/>
         </Route>
       </Routes>
-    </Router>
+    </>
   );
 }
 

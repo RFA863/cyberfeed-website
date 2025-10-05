@@ -1,4 +1,4 @@
-import Logo from "../assets/logo.png"
+// import Logo from "../assets/logo.png"
 
 function HomePage(){
 return(
@@ -19,7 +19,7 @@ return(
       </div>
 
       <div className="basis-1/2">
-        <img src={Logo} alt="Logo CyberFeed" />
+        <img src="/logo.png" alt="Logo CyberFeed" />
       </div>
     
  

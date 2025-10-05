@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   // Cek status login saat aplikasi dimuat
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
+    console.log(token)
     if (!token) {
       setLoading(false);
       return;
@@ -29,7 +30,8 @@ export const AuthProvider = ({ children }) => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, 
+  []);
 
   const login = async (email, password) => {
     const response = await api.post('/auth/login', { email, password });
