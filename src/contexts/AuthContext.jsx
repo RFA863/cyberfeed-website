@@ -1,60 +1,60 @@
-import { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import { createContext, useState, useEffect, useCallback } from 'react';
+
+import { loginSrv } from '../services/authService';
 
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
-  const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken'));
-  const [loading, setLoading] = useState(true); // State untuk loading awal
+  const [user, setUser] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Cek status login saat aplikasi dimuat
-  useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    console.log(token)
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-    // Verifikasi token dengan backend (opsional tapi direkomendasikan)
-    api.get('/users/profile')
-      .then(response => {
-        setUser(response.data);
-      })
-      .catch(() => {
-        // Jika token tidak valid, hapus
-        logout();
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, 
-  []);
-
-  const login = async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
-    const { user, accessToken, refreshToken } = response.data;
-
-    // Simpan semuanya di localStorage dan state
-    localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-
-    setUser(user);
-    setAccessToken(accessToken);
-    
-    navigate('/dashboard');
-  };
-
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('user');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setUser(null);
     setAccessToken(null);
     navigate('/login');
+  }, [navigate]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+   
+    if (!token) {
+      setLoading(false);
+      return;
+     
+    }
+
+    setAccessToken(token);
+    setUser(JSON.parse(localStorage.getItem('user')));
+    setLoading(false);
+
+    // api.get('/users/profile')
+    //   .catch(() => {
+        
+    //     logout();
+    //   })
+    //   .finally(() => {
+       
+    //     setLoading(false);
+    //   });
+  }, []);
+
+  const login = async (username, password) => {
+
+    const data = await loginSrv(username, password);
+
+    localStorage.setItem('user', JSON.stringify(data.user));
+    localStorage.setItem('accessToken', data.token.token);
+    localStorage.setItem('refreshToken', data.token.refreshToken);
+
+    setUser(data.user);
+    setAccessToken(data.token.token);
+    
   };
 
   const value = {
@@ -67,7 +67,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   if (loading) {
-    return <div>Loading application...</div>; 
+    return (
+      <div>lagi loading</div>
+    ); 
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

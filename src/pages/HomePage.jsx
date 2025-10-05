@@ -1,6 +1,7 @@
-// import Logo from "../assets/logo.png"
+import { Link } from "react-router-dom";
 
 function HomePage(){
+ 
 return(
   <div className="flex items-center h-dvh font-orbitron px-24 gap-6" >
 
@@ -13,9 +14,9 @@ return(
           upload your favorite photos, and see what your friends are up to. It's that simple.
         </h2>
 
-        <div>
-          <button className="font-bold px-12 py-6 rounded-xl border">D I S C O V E R</button>
-        </div>
+        <Link to="/dashboard">
+          <button className="font-bold px-12 py-6 rounded-xl border cursor-pointer">D I S C O V E R</button>
+        </Link>
       </div>
 
       <div className="basis-1/2">
