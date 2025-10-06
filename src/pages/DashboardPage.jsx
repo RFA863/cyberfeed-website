@@ -162,7 +162,7 @@ function DashboardPage() {
               <Avatar name={post.user.username}/>
 
               <div className="font-bold">
-                @{post.user.username}
+                {post.user.username}
               </div>
             </div>
 

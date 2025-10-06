@@ -6,30 +6,41 @@ import { Link } from "react-router-dom";
 function MyPostPage(){
 
   const [post, setPost] = useState([]);
-  const [postById, setPostById] = useState();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(false);
-  const [editedContent, setEditedContent] = useState(post.content);
+
+  const [editingPostId, setEditingPostId] = useState(null);
+
+  const [editedContent, setEditedContent] = useState('');
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(post.file || '')
+  const [imagePreview, setImagePreview] = useState('');
+
   const fileInputRef = useRef(null);
 
+  const startEditing = (post) => {
+    setEditingPostId(post.id);
+    setEditedContent(post.content);
+    setImagePreview(post.file || '');
+    setImageFile(null); // Reset file gambar baru setiap kali edit dimulai
+  };
+
+  const cancelEdit = () => {
+    setEditingPostId(null);
+    setError(''); // Bersihkan error saat batal
+  };
+
   const addImage = (e) => {
- 
     const file = e.target.files[0];
 
     if(file){
       setImageFile(file)
       setImagePreview(URL.createObjectURL(file));
-    }
-  }
+    };
+  };
 
-  const handleUpdate = async() => {
+  const handleUpdate = async(postId) => {
     setLoading(true);
-
     const formData = new FormData();
-
     formData.append('content', editedContent);
 
     if (imageFile) {
@@ -37,9 +48,10 @@ function MyPostPage(){
     };
 
     try {
-      const data = await updatePost(post.id, formData);
-      setEditing(false);
+      const data = await updatePost(postId, formData);
+      setEditingPostId(null);
       getPost();
+
     } catch (error) {
       setError(error.message);
     } finally{
@@ -47,35 +59,33 @@ function MyPostPage(){
     };
   };
 
-   const cancelEdit = () => {
-    setEditing(false);
-    setEditedContent(post.content);
-    setImageFile(null);
-    setImagePreview(post.file || '');
-  };
+  //  const cancelEdit = () => {
+  //   setEditing(false);
+  //   setEditedContent(post.content);
+  //   setImageFile(null);
+  //   setImagePreview(post.file || '');
+  // };
 
-  const getPost = async() => {
-    try {
-      const data = await getPostByUserId();
-      setPost(data);
-      setLoading(false)
-    } catch(error) {
- 
-        setError(error.message);
-    } finally {
-        setLoading(false);
-    }
-  }
-
-  const handleDelete = async(postId) => {
-    setLoading(true)
-    try {
-      if(window.confirm("Are you sure you want to delete this post?")) {
+  const handleDelete = async(postId) => {  
+    if(window.confirm("Are you sure you want to delete this post?")) {
+      try {
         console.log(postId)
         await deletePost(postId);
         getPost();
-      }
-    } catch(error){
+      
+      } catch(error){
+        setError(error.message);
+      };
+    };
+  };
+
+  const getPost = async() => {
+    setLoading(true);
+    try {
+      const data = await getPostByUserId();
+      setPost(data);
+  
+    } catch(error) {
       setError(error.message);
     } finally {
       setLoading(false);
@@ -87,9 +97,16 @@ function MyPostPage(){
   },[]);
 
 return(
-  <div className='px-24 flex flex-col items-center gap-8 my-8'>
-    
-    {post ? (
+  <div className='px-24 flex flex-col items-center gap-8 my-8 relative'>
+
+    <Link to="/dashboard">
+      <button className="absolute right-1/3 -top-8 text-5xl cursor-pointer">&times;</button>
+    </Link>
+
+    {loading && post.length === 0 && <p>Loading your posts...</p>}
+    {error && <p className="text-red-500">{error}</p>}
+
+    {!loading && post.length > 0 ? (
       post.map(post => 
         <div key={post.id} className='w-1/3 bg-[#0F172A] border border-slate-700 rounded-xl p-6 flex flex-col gap-4'>
           <div className="flex justify-between items-center border-b border-slate-700 pb-4">
@@ -97,7 +114,7 @@ return(
               <Avatar name={post.user.username}/>
 
               <div className="font-bold">
-                @{post.user.username}
+                {post.user.username}
               </div>
             </div>
 
@@ -107,7 +124,7 @@ return(
 
           </div>
 
-          {editing ? (
+          {editingPostId === post.id ? (
             <div>
               <textarea
                 className="w-full p-2 bg-slate-700 text-white rounded-md mb-2"
@@ -140,7 +157,7 @@ return(
                 </button>
 
                 <div className="flex gap-2">
-                  <button onClick={handleUpdate} disabled={isLoading} className="text-sm px-4 py-1 bg-green-600 rounded">
+                  <button onClick={() => handleUpdate(post.id)} disabled={loading} className="text-sm px-4 py-1 bg-green-600 rounded">
                     {loading ? 'Saving...' : 'Save'}
                   </button>
                   <button onClick={cancelEdit} className="text-sm px-4 py-1 bg-gray-600 rounded">Cancel</button>
@@ -158,6 +175,11 @@ return(
                   <img src={post.file} alt="Post Image" className=" max-w-full max-h-[200px] text-center flex justify-center"/>
                 </div>
               )}
+
+            <div className="flex gap-2">
+              <button onClick={() => startEditing(post)} className="text-xs text-blue-400 hover:underline">Edit</button>
+              <button onClick={() => handleDelete(post.id)} className="text-xs text-red-400 hover:underline">{post.id}Delete</button>
+            </div>
             </>  
           )}
 
@@ -170,14 +192,14 @@ return(
             </div>
           } */}
 
-          {!editing && 
+          {/* {!editing && 
           (
           <div className="flex gap-2">
-            <button onClick={() => setEditing(true)} className="text-xs text-blue-400 hover:underline">Edit</button>
-            <button onClick={ () =>handleDelete(post.id)} className="text-xs text-red-400 hover:underline">{post.id}Delete</button>
+            <button onClick={() => startEditing(post)} className="text-xs text-blue-400 hover:underline">Edit</button>
+            <button onClick={() => handleDelete(post.id)} className="text-xs text-red-400 hover:underline">{post.id}Delete</button>
           </div>
         )
-          }
+          } */}
          
       </div>
      
