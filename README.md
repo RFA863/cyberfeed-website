@@ -36,7 +36,7 @@ This is the official frontend for CyberFeed, a simple social media application b
 1.  **Clone this repository:**
 
     ```bash
-    git clone [https://github.com/rfa863/cyberfeed-website.git](https://github.com/rfa863/cyberfeed-website.git)
+    git clone https://github.com/rfa863/cyberfeed-website.git
     ```
 
 2.  **Navigate to the project directory:**
