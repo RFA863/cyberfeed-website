@@ -4,6 +4,13 @@ This is the official frontend for CyberFeed, a simple social media application b
 
 ---
 
+## Links
+
+* **Live Website**: [https://cyberfeed-website.vercel.app/](https://cyberfeed-website.vercel.app/)
+* **API URL**: [https://cyberfeed-controller.vercel.app](https://cyberfeed-controller.vercel.app)
+
+---
+
 ## Features
 
 * **User Authentication**:
