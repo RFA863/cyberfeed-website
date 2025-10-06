@@ -28,7 +28,7 @@ function LoginPage() {
 
   return (
     <div className="h-dvh flex items-center justify-center">
-      <div className='px-24 py-6 rounded-xl border border-slate-700 bg-[#0F172A99]/60 w-1/3'>
+      <div className='mx-6 md:mx-24 px-6 md:px-12 py-4 md:py-6 rounded-xl border border-slate-700 bg-[#0F172A99]/60 w-full  xl:w-1/3'>
         <div className='text-center font-orbitron font-bold text-3xl' >Sign In</div>
         
         <form onSubmit={handleSubmit}>
@@ -57,8 +57,10 @@ function LoginPage() {
               />
           </div>
 
+          {error && <p className="text-red-500 p-3  text-center">{error}</p>}
+
           <button 
-            className='text-center bg-[#0EA5E9] py-3 w-full rounded-xl' 
+            className='text-center bg-[#0EA5E9] py-3 w-full rounded-xl hover:bg-[#0B8AC4] transition-colors' 
             type='submit'
             disabled={isLoading}>
               {isLoading ? 'Loading...' : 'Sign In'}
@@ -66,7 +68,7 @@ function LoginPage() {
         </form>
 
         <div className='text-center my-8'>Don't have any account ?
-          <Link to='/register'>Sign Up</Link> 
+          <Link to='/register' className='text-cyan-500 cursor-pointer hover:underline'> Sign Up</Link> 
         </div>
 
       </div>

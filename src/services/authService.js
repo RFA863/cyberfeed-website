@@ -7,7 +7,7 @@ export const loginSrv = async (username, password) => {
     return response.data.data;
 
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Login failed. Please check your credentials.');
+    throw new Error(error.response.data.message || 'Login failed. Please check your credentials.');
   };
 };
 

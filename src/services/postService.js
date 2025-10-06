@@ -14,7 +14,7 @@ export const getPostByUserId = async () => {
     const response = await api.get("/post/get/my-post");
     return response.data.data;
   } catch (error) {
-    console.error(error.response.data.message)
+    throw new Error(error.response?.data?.message || 'Failed to get post.')
 
   };
 };
@@ -24,7 +24,7 @@ export const getPostById = async (postId) => {
     const response = await api.get(`/post/get/${postId}`)
     return response.data.data;
   } catch (error) {
-    console.error(error.response.data.message);
+    throw new Error(error.response?.data?.message || 'Failed to get post.')
   };
 };
 
@@ -37,7 +37,11 @@ export const createPost = async (formData) => {
     });
     return response.data;
   } catch (error) {
-    console.error(error.response.data.message);
+    console.log(error.response.data.err.type)
+    if (error.response.data.err.type === "validator, ") {
+      throw new Error("content (text) : " + error.response.data.message)
+    }
+    throw new Error(error.response.data.message);
   }
 };
 
@@ -50,7 +54,10 @@ export const updatePost = async (postId, formData) => {
     });
     return response.data.data;
   } catch (error) {
-    console.error(error.response.data.message);
+    if (error.response.data.err.type === 'validator') {
+      throw new Error("content (text) : " + error.response.data.message)
+    }
+    throw new Error(error.response.data.message);
   };
 };
 
@@ -58,7 +65,7 @@ export const deletePost = async (postId) => {
   try {
     await api.delete(`/post/delete/${postId}`);
   } catch (error) {
-    console.error(error.response.data.message);
+    throw new Error(error.response.data.message)
   };
 };
 

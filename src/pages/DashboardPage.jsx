@@ -23,12 +23,14 @@ function DashboardPage() {
     if(file){
       setImageFile(file)
       setImagePreview(URL.createObjectURL(file));
+      setError('');
     };
   };
 
   const removeImage = () => {
     setImageFile(null);
     setImagePreview('');
+    setError('');
 
     if(fileInputRef.current){
       fileInputRef.current.value = ""
@@ -83,9 +85,9 @@ function DashboardPage() {
   },[])
  
   return (
-    <div className='px-24 flex flex-col items-center gap-8 my-8'>
+    <div className='mx-6 md:mx-24 px-6 md:px-12  flex flex-col items-center gap-8 my-8'>
 
-      <div className='w-1/3 bg-[#0F172A] border border-slate-700 rounded-xl p-6 flex flex-col gap-4'>
+      <div className='w-full xl:w-1/3 bg-[#0F172A] border border-slate-700 rounded-xl p-6 flex flex-col gap-4'>
 
         <div className="flex justify-between items-center">
 
@@ -156,7 +158,7 @@ function DashboardPage() {
       </div>
 
       {post.map( post => 
-        <div key={post.id} className='w-1/3 bg-[#0F172A] border border-slate-700 rounded-xl p-6 flex flex-col gap-4'>
+        <div key={post.id} className='w-full xl:w-1/3 bg-[#0F172A] border border-slate-700 rounded-xl p-6 flex flex-col gap-4'>
           <div className="flex justify-between items-center border-b border-slate-700 pb-4">
             <div className="basis-1/2 flex gap-2 items-center">
               <Avatar name={post.user.username}/>

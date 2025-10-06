@@ -21,12 +21,13 @@ function MyPostPage(){
     setEditingPostId(post.id);
     setEditedContent(post.content);
     setImagePreview(post.file || '');
-    setImageFile(null); // Reset file gambar baru setiap kali edit dimulai
+    setImageFile(null); 
+    setError('');
   };
 
   const cancelEdit = () => {
     setEditingPostId(null);
-    setError(''); // Bersihkan error saat batal
+    setError(''); 
   };
 
   const addImage = (e) => {
@@ -35,6 +36,7 @@ function MyPostPage(){
     if(file){
       setImageFile(file)
       setImagePreview(URL.createObjectURL(file));
+      setError('');
     };
   };
 
@@ -59,17 +61,12 @@ function MyPostPage(){
     };
   };
 
-  //  const cancelEdit = () => {
-  //   setEditing(false);
-  //   setEditedContent(post.content);
-  //   setImageFile(null);
-  //   setImagePreview(post.file || '');
-  // };
+ 
 
   const handleDelete = async(postId) => {  
     if(window.confirm("Are you sure you want to delete this post?")) {
+      setLoading(true)
       try {
-        console.log(postId)
         await deletePost(postId);
         getPost();
       
@@ -81,6 +78,7 @@ function MyPostPage(){
 
   const getPost = async() => {
     setLoading(true);
+    setPost([])
     try {
       const data = await getPostByUserId();
       setPost(data);
@@ -97,18 +95,20 @@ function MyPostPage(){
   },[]);
 
 return(
-  <div className='px-24 flex flex-col items-center gap-8 my-8 relative'>
+  <div className='mx-6 md:mx-24 px-6 md:px-12 flex flex-col items-center gap-8 my-8 relative'>
 
-    <Link to="/dashboard">
-      <button className="absolute right-1/3 -top-8 text-5xl cursor-pointer">&times;</button>
-    </Link>
+    {post.length !== 0 && (
+      <Link to="/dashboard">
+        <button className="absolute right-0 xl:right-1/3 -top-8 text-5xl cursor-pointer">&times;</button>
+      </Link>
+    )}
 
     {loading && post.length === 0 && <p>Loading your posts...</p>}
     {error && <p className="text-red-500">{error}</p>}
 
     {!loading && post.length > 0 ? (
       post.map(post => 
-        <div key={post.id} className='w-1/3 bg-[#0F172A] border border-slate-700 rounded-xl p-6 flex flex-col gap-4'>
+        <div key={post.id} className='w-full xl:w-1/3 bg-[#0F172A] border border-slate-700 rounded-xl p-6 flex flex-col gap-4'>
           <div className="flex justify-between items-center border-b border-slate-700 pb-4">
             <div className="basis-1/2 flex gap-2 items-center">
               <Avatar name={post.user.username}/>
@@ -134,7 +134,7 @@ return(
 
               {imagePreview && (
                 <div className="my-2">
-                  <img src={imagePreview} alt="Preview" className="rounded-lg max-w-xs h-auto" />
+                  <img src={imagePreview} alt="Preview" className="rounded-lg max-w-full max-h-[200px]" />
                 </div>
               )}
 
@@ -177,29 +177,21 @@ return(
               )}
 
             <div className="flex gap-2">
-              <button onClick={() => startEditing(post)} className="text-xs text-blue-400 hover:underline">Edit</button>
-              <button onClick={() => handleDelete(post.id)} className="text-xs text-red-400 hover:underline">{post.id}Delete</button>
+              <button 
+              onClick={() => startEditing(post)} 
+              className="text-xs font-semibold bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full hover:bg-blue-500/40 transition-colors"
+              >
+                Edit
+              </button>
+              <button 
+              onClick={() => handleDelete(post.id)} 
+              className="text-xs font-semibold bg-red-500/20 text-red-300 px-3 py-1 rounded-full hover:bg-red-500/40 transition-colors"
+              >
+                Delete
+              </button>
             </div>
             </>  
           )}
-
-          {/* <div>
-            {post.content}
-          </div>
-          { post.file &&
-            <div className="flex justify-center bg-slate-800 border border-slate-700 rounded-xl">
-              <img src={post.file} alt="Post Image" className=" max-w-full max-h-[200px] text-center flex justify-center"/>
-            </div>
-          } */}
-
-          {/* {!editing && 
-          (
-          <div className="flex gap-2">
-            <button onClick={() => startEditing(post)} className="text-xs text-blue-400 hover:underline">Edit</button>
-            <button onClick={() => handleDelete(post.id)} className="text-xs text-red-400 hover:underline">{post.id}Delete</button>
-          </div>
-        )
-          } */}
          
       </div>
      
@@ -208,7 +200,7 @@ return(
       <div>
         <div className="font-orbitron font-bold text-4xl "> No post yet</div>
         <Link to="/dashboard">
-          <button className="border border-slate-700 rounded-xl px-8 py-4 my-8 cursor-pointer">Back to Dashboard</button>
+          <button className="border border-slate-700 rounded-xl px-8 py-4 my-8 cursor-pointer hover:bg-slate-600 transition-colors">Back to Dashboard</button>
         </Link>
       </div>
     )}

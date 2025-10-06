@@ -25,9 +25,9 @@ function Navbar(){
   }, [dropdownRef])
 
   return(
-    <div className="sticky top-0  w-full  backdrop-blur-sm flex justify-between items-center px-24 py-6 border-b border-slate-700">
+    <div className="sticky top-0  w-full  backdrop-blur-sm flex justify-between items-center px-6 md:px-24 py-3 md:py-6 border-b border-slate-700">
       <Link to="/" className="cursor-pointer">
-        <img src="/logo.png" alt="CyberFeed Logo" width={250}/>
+        <img src="/logo.png" alt="CyberFeed Logo" className="w-[150px] md:w-[250px]"/>
       </Link>
 
       {user ? (
@@ -60,7 +60,7 @@ function Navbar(){
       ) : (
         <div>
           <Link to="/login">
-            <button className="font-exo2 font-bold bg-[#A855F7] px-6 py-3 rounded-xl cursor-pointer">Sign In</button>
+            <button className="font-exo2 font-bold bg-[#A855F7] px-4 md:px-6 py-2 md:py-3 rounded-xl cursor-pointer hover:bg-purple-700 transition-colors">Sign In</button>
           </Link>
         </div>
       )}
