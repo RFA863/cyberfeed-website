@@ -68,6 +68,7 @@ function MyPostPage(){
       setLoading(true)
       try {
         await deletePost(postId);
+        setPost(currentPosts => currentPosts.filter(p => p.id !== postId));
         getPost();
       
       } catch(error){
@@ -78,7 +79,6 @@ function MyPostPage(){
 
   const getPost = async() => {
     setLoading(true);
-    setPost([])
     try {
       const data = await getPostByUserId();
       setPost(data);
