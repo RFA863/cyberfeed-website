@@ -6,9 +6,8 @@ This is the official frontend for CyberFeed, a simple social media application b
 
 ## Links
 
-* **Live Website**: [https://cyberfeed-website.vercel.app/](https://cyberfeed-website.vercel.app/)
-* **API URL**: [https://cyberfeed-controller.vercel.app](https://cyberfeed-controller.vercel.app)
-
+* **Live Website**: https://cyberfeed-website.vercel.app/
+* **API URL**: https://cyberfeed-controller.vercel.app
 ---
 
 ## Features
@@ -67,7 +66,7 @@ This is the official frontend for CyberFeed, a simple social media application b
 5.  **Set the API URL in your new `.env` file**:
 
     ```
-    VITE_API_URL='[https://cyberfeed-controller.vercel.app](https://cyberfeed-controller.vercel.app)'
+    VITE_API_URL='https://cyberfeed-controller.vercel.app'
     ```
 
 ---
