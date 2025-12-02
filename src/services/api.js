@@ -43,7 +43,7 @@ api.interceptors.response.use(
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('user');
-        window.location.href = '/login'; // Redirect ke halaman login
+        window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }

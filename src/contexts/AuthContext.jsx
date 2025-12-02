@@ -33,15 +33,7 @@ export const AuthProvider = ({ children }) => {
     setUser(JSON.parse(localStorage.getItem('user')));
     setLoading(false);
 
-    // api.get('/users/profile')
-    //   .catch(() => {
-        
-    //     logout();
-    //   })
-    //   .finally(() => {
-       
-    //     setLoading(false);
-    //   });
+  
   }, []);
 
   const login = async (username, password) => {
